@@ -1,16 +1,5 @@
-import time
-import zipfile
-import sys
-import os
-from tqdm import tqdm
-from bs4 import BeautifulSoup as bs
-from zipfile import ZipFile
-import pandas
-import datetime
 
-from project_tools.read_write_pickle import read_from_pickle
 from project_tools.read_write_pickle import write_to_pickle
-
 from project_tools.os_tools import generator_files_in_dir
 from project_tools.os_tools import extract_zip_by_vacancy
 
@@ -48,18 +37,13 @@ def filter_vacancy_by_catalogues_and_positions(vacancy, cat_set=set(), pos_set=s
             return False
 
 
-
-
 superjob_dir = "F:\superjob.ru"
 vacancies_zips = superjob_dir + '\\vacancies_zip_by_million'
 
 files_zip = [file for file in generator_files_in_dir(vacancies_zips, extension='.zip')]
 print(files_zip)
 
-
-
 #%%
-
 hard_match = True
 
 from catalog_class import Catalog
@@ -110,7 +94,7 @@ for cat_pos_tpl in TPLs:
         #    print(f'Файл уже существует {name}')
         #    continue
 
-        for vacancy in extract_zip_by_vacancy(file_zip, n=100):
+        for vacancy in extract_zip_by_vacancy(file_zip):
 
             if filter_vacancy_by_catalogues_and_positions(vacancy,
                                                           cat_set=CATALOGs_KEYs,
