@@ -6,9 +6,9 @@ class Catalog():
     def __init__(self, path):
         self.path = path
         self.catalogues = None
-        self.read_catalogs()
+        self._read_catalogs()
 
-    def read_catalogs(self):
+    def _read_catalogs(self):
         try:
             with open(self.path, 'rb') as f:
                 self.catalogues = pickle.load(f)
@@ -21,6 +21,12 @@ class Catalog():
         print(f'key, title_rus')
         for catalog in self.catalogues:
             print(catalog['key'], ' '*(6-len(str(catalog['key']))), catalog['title_rus'])
+
+    def print_all_positions(self, key_catalog):
+        catalog = self.get_catalog_by_key(key_catalog)
+        print(catalog['key'], catalog['title_rus'])
+        for position in catalog['positions']:
+            print(position['key'], ' ' * (6 - len(str(position['key']))), position['title_rus'])
 
     def get_catalog_by_key(self, key_catalog):
         for catalog in self.catalogues:
@@ -37,12 +43,9 @@ class Catalog():
         else:
             return -1
 
-    def print_all_positions(self, key_catalog):
-        catalog = self.get_catalog_by_key(key_catalog)
-        print(catalog['key'], catalog['title_rus'])
-        for position in catalog['positions']:
-            print(position['key'], ' ' * (6 - len(str(position['key']))), position['title_rus'])
-
+    def generator_catalogs_keys(self):
+        for catalog in self.catalogues:
+            yield catalog['key']
 
 if __name__ == "__main__":
     catalog_ = Catalog(r"data\catalogues.pickle")
@@ -51,3 +54,6 @@ if __name__ == "__main__":
     # catalog.print_all_positions(33)
 
     print(catalog_.get_position_by_key(48))
+
+    for i in catalog_.generator_catalogs_keys():
+        print(i)

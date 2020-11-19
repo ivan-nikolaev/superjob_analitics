@@ -47,7 +47,8 @@ def filter_vacancy_by_catalogues_and_positions(vacancy, cat_set=set(), pos_set=s
         else:
             return False
 
-#%%
+
+
 
 superjob_dir = "F:\superjob.ru"
 vacancies_zips = superjob_dir + '\\vacancies_zip_by_million'
@@ -59,10 +60,17 @@ print(files_zip)
 
 #%%
 
-TPLs = [({33},{48}), ({33},{51}), ({33},{48,51})]
+hard_match = True
+
+from catalog_class import Catalog
+catalog_obj = Catalog(r"..\\data\catalogues.pickle")
+
+TPLs = [({key}, set()) for key in catalog_obj.generator_catalogs_keys()]
+print(TPLs)
+#TPLs = [({33},{48}), ({33},{51}), ({33},{48,51})]
 #TPLs = [({33}, set())]
 
-
+#%%
 for cat_pos_tpl in TPLs:
     CATALOGs_KEYs = cat_pos_tpl[0]
     CATALOGs_KEYs_str = 'CK_'+'_'.join([str(key) for key in CATALOGs_KEYs])
@@ -79,7 +87,7 @@ for cat_pos_tpl in TPLs:
     project_dir = "F:\superjob.ru"
     name_dir = f"filtered_vacancies\\{CATALOGs_KEYs_str}_{POSITIONs_KEYs_str}"
 
-    filtered_dir_name = f"{project_dir}\{name_dir}"
+    filtered_dir_name = f"{project_dir}\{name_dir}" + ('_hard' if hard_match else '_soft')
     filtered_tmp_dir_name = filtered_dir_name + '\\tmp'
 
 
@@ -93,7 +101,7 @@ for cat_pos_tpl in TPLs:
     vacancies = []
     part=1
 
-    for file_zip in files_zip[:1]:
+    for file_zip in files_zip[:]:
         print(f"Фильтруем вакансии по CATALOGs_KEYs = {CATALOGs_KEYs}, POSITIONs_KEYs = {POSITIONs_KEYs}")
         name = file_zip.split('\\')[-1].split('.')[0]
         file_pkl = f'{filtered_tmp_dir_name}\\filtered_{name}'
@@ -102,12 +110,13 @@ for cat_pos_tpl in TPLs:
         #    print(f'Файл уже существует {name}')
         #    continue
 
-        for vacancy in extract_zip_by_vacancy(file_zip):
+        for vacancy in extract_zip_by_vacancy(file_zip, n=100):
 
             if filter_vacancy_by_catalogues_and_positions(vacancy,
                                                           cat_set=CATALOGs_KEYs,
                                                           pos_set=POSITIONs_KEYs,
-                                                          hard_match=True):
+                                                          hard_match=hard_match):
+                print(get_catalogues_from_vacancy(vacancy))
                 vacancies.append(vacancy)
 
             if(len(vacancies)==100):
