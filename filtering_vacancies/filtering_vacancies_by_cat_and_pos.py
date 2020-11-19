@@ -14,6 +14,41 @@ from project_tools.read_write_pickle import write_to_pickle
 from project_tools.os_tools import generator_files_in_dir
 from project_tools.os_tools import extract_zip_by_vacancy
 
+
+def get_catalogues_from_vacancy(vacancy):
+    try:
+        return [catalog['key'] for catalog in vacancy['catalogues']]
+    except:
+        return []
+
+
+def get_positions_from_vacancy(vacancy):
+    try:
+        return [position['key'] for catalog in vacancy['catalogues'] for position in catalog['positions']]
+    except:
+        return []
+
+
+def filter_vacancy_by_catalogues_and_positions(vacancy, cat_set=set(), pos_set=set(), hard_match=True):
+    try:
+        vacancy_cats = set(get_catalogues_from_vacancy(vacancy))
+        vacancy_poss = set(get_positions_from_vacancy(vacancy))
+    except:
+        return False
+
+    if hard_match:
+        if (cat_set == vacancy_cats or cat_set == set()) and (pos_set == vacancy_poss or pos_set == set()):
+            return True
+        else:
+            return False
+    else:
+        if (cat_set.issubset(vacancy_cats) or cat_set == set()) and (
+                pos_set.issubset(vacancy_poss) or pos_set == set()):
+            return True
+        else:
+            return False
+
+
 #%%
 
 superjob_dir = "F:\superjob.ru"
@@ -24,10 +59,13 @@ print(files_zip)
 
 
 
-
-
 #%%
-for cat_pos_tpl in [({33},{48}), ({33},{51}), ({33},{48,51})]:
+
+#TPLs = [({33},{48}), ({33},{51}), ({33},{48,51})]
+TPLs = [({33},{})]
+
+
+for cat_pos_tpl in TPLs:
     CATALOGs_KEYs = cat_pos_tpl[0]
     CATALOGs_KEYs_str = 'CK_'+'_'.join([str(key) for key in CATALOGs_KEYs])
 
@@ -41,7 +79,7 @@ for cat_pos_tpl in [({33},{48}), ({33},{51}), ({33},{48,51})]:
     import shutil
 
     project_dir = "F:\superjob.ru"
-    name_dir = f"filtered_vacancies_{CATALOGs_KEYs_str}_{POSITIONs_KEYs_str}"
+    name_dir = f"filtered_vacancies\\{CATALOGs_KEYs_str}_{POSITIONs_KEYs_str}"
 
     filtered_dir_name = f"{project_dir}\{name_dir}"
     filtered_tmp_dir_name = filtered_dir_name + '\\tmp'
@@ -53,44 +91,6 @@ for cat_pos_tpl in [({33},{48}), ({33},{51}), ({33},{48,51})]:
     os.mkdir(filtered_dir_name )
     os.mkdir(filtered_tmp_dir_name)
     #%%
-
-
-    def get_catalogues_from_vacancy(vacancy):
-      try:
-        return [catalog['key'] for catalog in vacancy['catalogues']]
-      except:
-        return []
-
-    def get_positions_from_vacancy(vacancy):
-      try:
-        return [position['key'] for catalog in vacancy['catalogues'] for position in catalog['positions']]
-      except:
-        return []
-
-
-    def filter_vacancies_by_catalogues_and_positions(vacancy, cat_set = set(), pos_set = set(), hard_match=True):
-        try:
-            if hard_match:
-                if cat_set == set(get_catalogues_from_vacancy(vacancy)) or cat_set=={}:
-                    if pos_set == set(get_positions_from_vacancy(vacancy)) or pos_set=={}:
-                        return True
-                    else:
-                        return False
-                else:
-                    return False
-            else:
-                if cat_set.issubset(set(get_catalogues_from_vacancy(vacancy))) or cat_set==set():
-                    if pos_set.issubset(set(get_positions_from_vacancy(vacancy))) or pos_set==set():
-                        return True
-                    else:
-                        return False
-                else:
-                    return False
-        except:
-          return False
-
-
-
 
     vacancies = []
     part=1
@@ -105,7 +105,7 @@ for cat_pos_tpl in [({33},{48}), ({33},{51}), ({33},{48,51})]:
         #    continue
 
         for vacancy in extract_zip_by_vacancy(file_zip):
-            if filter_vacancies_by_catalogues_and_positions(vacancy, cat_set=CATALOGs_KEYs, pos_set=POSITIONs_KEYs):
+            if filter_vacancy_by_catalogues_and_positions(vacancy, cat_set=CATALOGs_KEYs, pos_set=POSITIONs_KEYs):
                 vacancies.append(vacancy)
 
             if(len(vacancies)==100):
