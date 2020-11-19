@@ -38,7 +38,7 @@ if os.path.exists(filtered_dir_name):
 
 os.mkdir(filtered_dir_name)
 
-for file_zip in files_zip[:1]:
+for file_zip in files_zip[:]:
     name = file_zip.split('\\')[-1]
 
     filename = filtered_dir_name + f'\\id_date_cats_poss_{name}_df.pkl'

@@ -1,3 +1,6 @@
+import os
+import shutil
+
 
 from project_tools.read_write_pickle import write_to_pickle
 from project_tools.os_tools import generator_files_in_dir
@@ -36,8 +39,15 @@ def filter_vacancy_by_catalogues_and_positions(vacancy, cat_set=set(), pos_set=s
         else:
             return False
 
+#%%
 
 superjob_dir = "F:\superjob.ru"
+filtering_dir = f"{superjob_dir}\\filtered_vacancies_by_cats_poss"
+
+if not os.path.exists(filtering_dir):
+    os.mkdir(filtering_dir)
+
+
 vacancies_zips = superjob_dir + '\\vacancies_zip_by_million'
 
 files_zip = [file for file in generator_files_in_dir(vacancies_zips, extension='.zip')]
@@ -47,7 +57,7 @@ print(files_zip)
 hard_match = True
 
 from catalog_class import Catalog
-catalog_obj = Catalog(r"data\catalogues.pickle")
+catalog_obj = Catalog(r"..\\data\catalogues.pickle")
 
 TPLs = [({key}, set()) for key in catalog_obj.generator_catalogs_keys()]
 print(TPLs)
@@ -64,22 +74,17 @@ for cat_pos_tpl in TPLs:
 
 
     print(CATALOGs_KEYs_str, POSITIONs_KEYs_str)
-    #%%
-    import os
-    import shutil
 
-    project_dir = "F:\superjob.ru"
-    name_dir = f"filtered_vacancies_by_cats_poss\\{CATALOGs_KEYs_str}_{POSITIONs_KEYs_str}"
+    sub_filtering_dir = f"{filtering_dir}\\{CATALOGs_KEYs_str}_{POSITIONs_KEYs_str}_{'hard' if hard_match else 'soft'}"
 
-    filtered_dir_name = f"{project_dir}\{name_dir}" + ('_hard' if hard_match else '_soft')
-    filtered_tmp_dir_name = filtered_dir_name + '\\tmp'
+    tmp_sub_filtering_dir = sub_filtering_dir + '\\tmp'
 
 
-    if os.path.exists(filtered_dir_name ):
-        shutil.rmtree(filtered_dir_name )
+    if os.path.exists(sub_filtering_dir):
+        shutil.rmtree(sub_filtering_dir)
 
-    os.mkdir(filtered_dir_name )
-    os.mkdir(filtered_tmp_dir_name)
+    os.mkdir(sub_filtering_dir )
+    os.mkdir(tmp_sub_filtering_dir)
     #%%
 
     vacancies = []
@@ -88,7 +93,7 @@ for cat_pos_tpl in TPLs:
     for file_zip in files_zip[:]:
         print(f"Фильтруем вакансии по CATALOGs_KEYs = {CATALOGs_KEYs}, POSITIONs_KEYs = {POSITIONs_KEYs}")
         name = file_zip.split('\\')[-1].split('.')[0]
-        file_pkl = f'{filtered_tmp_dir_name}\\filtered_{name}'
+        file_pkl = f'{tmp_sub_filtering_dir}\\filtered_{name}'
 
         #if os.path.exists(file_pkl):
         #    print(f'Файл уже существует {name}')
@@ -108,11 +113,11 @@ for cat_pos_tpl in TPLs:
                 vacancies = []
                 part+=1
 
-        new_file_zip = filtered_dir_name +"\\"+ file_zip.split('\\')[-1]
-        files_pkl = [file for file in generator_files_in_dir(filtered_tmp_dir_name, extension = '.pkl')]
+        new_file_zip = sub_filtering_dir +"\\"+ file_zip.split('\\')[-1]
+        files_pkl = [file for file in generator_files_in_dir(tmp_sub_filtering_dir, extension ='.pkl')]
 
         if(len(files_pkl)>0):
-            shutil.make_archive(new_file_zip, 'zip', filtered_tmp_dir_name)
+            shutil.make_archive(new_file_zip, 'zip', tmp_sub_filtering_dir)
 
     #    print('Записываем все pkl из папке tmp в zip')
     #    with ZipFile(new_file_zip, 'w') as zipObj:
@@ -120,5 +125,5 @@ for cat_pos_tpl in TPLs:
     #        zipObj.write(file_pkl)
 
         print('Отчищаем папку tmp от pkl файлов')
-        shutil.rmtree(filtered_tmp_dir_name)
-        os.mkdir(filtered_tmp_dir_name)
+        shutil.rmtree(tmp_sub_filtering_dir)
+        os.mkdir(tmp_sub_filtering_dir)
