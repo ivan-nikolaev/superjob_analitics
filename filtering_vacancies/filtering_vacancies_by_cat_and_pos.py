@@ -14,26 +14,6 @@ from project_tools.read_write_pickle import write_to_pickle
 from project_tools.os_tools import generator_files_in_dir
 from project_tools.os_tools import extract_zip_by_vacancy
 
-
-# import os
-#
-#
-# def generator_files_in_dir(top_directory, extension=''):
-#     for root, dirs, files in os.walk(top_directory):
-#         for filename in filter(lambda fname: fname.endswith(extension), files):
-#             filename_full = os.path.join(root, filename)
-#             if os.path.isfile(filename_full) is True:
-#                 yield filename_full
-
-
-# def extract_zip_by_vacancy(input_zip):
-#     print(f"\nОткрываем zip файл: {input_zip}")
-#     with zipfile.ZipFile(input_zip) as opened_zip:
-#         for pickle_file_in_zip in tqdm(opened_zip.namelist()[:], desc="files in zip"):
-#             with opened_zip.open(pickle_file_in_zip, 'r') as mypicklefile:
-#                 block_vacancies = pickle.load(mypicklefile)
-#                 for vacancy in block_vacancies:
-#                     yield vacancy
 #%%
 
 superjob_dir = "F:\superjob.ru"
@@ -87,18 +67,30 @@ for cat_pos_tpl in [({33},{48}), ({33},{51}), ({33},{48,51})]:
       except:
         return []
 
-    def filter_vacancies_by_catalogues_and_positions(vacancy, cat_set = {}, pos_set = {}):
 
+    def filter_vacancies_by_catalogues_and_positions(vacancy, cat_set = set(), pos_set = set(), hard_match=True):
         try:
-          if cat_set == set(get_catalogues_from_vacancy(vacancy)) or cat_set=={}:
-            if pos_set == set(get_positions_from_vacancy(vacancy)) or pos_set=={}:
-              return True
+            if hard_match:
+                if cat_set == set(get_catalogues_from_vacancy(vacancy)) or cat_set=={}:
+                    if pos_set == set(get_positions_from_vacancy(vacancy)) or pos_set=={}:
+                        return True
+                    else:
+                        return False
+                else:
+                    return False
             else:
-              return False
-          else:
-            return False
+                if cat_set.issubset(set(get_catalogues_from_vacancy(vacancy))) or cat_set==set():
+                    if pos_set.issubset(set(get_positions_from_vacancy(vacancy))) or pos_set==set():
+                        return True
+                    else:
+                        return False
+                else:
+                    return False
         except:
           return False
+
+
+
 
     vacancies = []
     part=1
