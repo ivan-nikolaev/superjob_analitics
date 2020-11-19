@@ -42,12 +42,10 @@ def filter_vacancy_by_catalogues_and_positions(vacancy, cat_set=set(), pos_set=s
         else:
             return False
     else:
-        if (cat_set.issubset(vacancy_cats) or cat_set == set()) and (
-                pos_set.issubset(vacancy_poss) or pos_set == set()):
+        if (cat_set.issubset(vacancy_cats) or cat_set == set()) and (pos_set.issubset(vacancy_poss) or pos_set == set()):
             return True
         else:
             return False
-
 
 #%%
 
@@ -62,7 +60,7 @@ print(files_zip)
 #%%
 
 #TPLs = [({33},{48}), ({33},{51}), ({33},{48,51})]
-TPLs = [({33},{})]
+TPLs = [({33}, set())]
 
 
 for cat_pos_tpl in TPLs:
@@ -95,7 +93,7 @@ for cat_pos_tpl in TPLs:
     vacancies = []
     part=1
 
-    for file_zip in files_zip[:]:
+    for file_zip in files_zip[:1]:
         print(f"Фильтруем вакансии по CATALOGs_KEYs = {CATALOGs_KEYs}, POSITIONs_KEYs = {POSITIONs_KEYs}")
         name = file_zip.split('\\')[-1].split('.')[0]
         file_pkl = f'{filtered_tmp_dir_name}\\filtered_{name}'
@@ -104,8 +102,16 @@ for cat_pos_tpl in TPLs:
         #    print(f'Файл уже существует {name}')
         #    continue
 
-        for vacancy in extract_zip_by_vacancy(file_zip):
-            if filter_vacancy_by_catalogues_and_positions(vacancy, cat_set=CATALOGs_KEYs, pos_set=POSITIONs_KEYs):
+        for vacancy in extract_zip_by_vacancy(file_zip, n=100):
+
+            vacancy_cats = set(get_catalogues_from_vacancy(vacancy))
+            vacancy_poss = set(get_positions_from_vacancy(vacancy))
+            print(vacancy_cats, vacancy_poss, '*')
+
+            if filter_vacancy_by_catalogues_and_positions(vacancy,
+                                                          cat_set=CATALOGs_KEYs,
+                                                          pos_set=POSITIONs_KEYs,
+                                                          hard_match=True):
                 vacancies.append(vacancy)
 
             if(len(vacancies)==100):
