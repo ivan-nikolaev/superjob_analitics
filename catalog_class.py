@@ -1,7 +1,6 @@
 
 import pickle
 
-print()
 
 class Catalog():
     def __init__(self, path):
