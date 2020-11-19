@@ -59,8 +59,8 @@ print(files_zip)
 
 #%%
 
-#TPLs = [({33},{48}), ({33},{51}), ({33},{48,51})]
-TPLs = [({33}, set())]
+TPLs = [({33},{48}), ({33},{51}), ({33},{48,51})]
+#TPLs = [({33}, set())]
 
 
 for cat_pos_tpl in TPLs:
@@ -102,11 +102,7 @@ for cat_pos_tpl in TPLs:
         #    print(f'Файл уже существует {name}')
         #    continue
 
-        for vacancy in extract_zip_by_vacancy(file_zip, n=100):
-
-            vacancy_cats = set(get_catalogues_from_vacancy(vacancy))
-            vacancy_poss = set(get_positions_from_vacancy(vacancy))
-            print(vacancy_cats, vacancy_poss, '*')
+        for vacancy in extract_zip_by_vacancy(file_zip):
 
             if filter_vacancy_by_catalogues_and_positions(vacancy,
                                                           cat_set=CATALOGs_KEYs,
