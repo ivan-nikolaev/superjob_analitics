@@ -47,6 +47,10 @@ class Catalog():
         for catalog in self.catalogues:
             yield catalog['key']
 
+    def generator_positions_keys_by_catalog_key(self, catalog_key):
+        for positions in self.get_catalog_by_key(catalog_key)['positions']:
+            yield positions['key']
+
 if __name__ == "__main__":
     catalog_ = Catalog(r"data\catalogues.pickle")
     # print(catalog.get_catalog_by_number(33))
