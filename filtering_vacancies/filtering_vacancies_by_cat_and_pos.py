@@ -47,7 +47,7 @@ print(files_zip)
 hard_match = True
 
 from catalog_class import Catalog
-catalog_obj = Catalog(r"..\\data\catalogues.pickle")
+catalog_obj = Catalog(r"data\catalogues.pickle")
 
 TPLs = [({key}, set()) for key in catalog_obj.generator_catalogs_keys()]
 print(TPLs)
@@ -69,7 +69,7 @@ for cat_pos_tpl in TPLs:
     import shutil
 
     project_dir = "F:\superjob.ru"
-    name_dir = f"filtered_vacancies\\{CATALOGs_KEYs_str}_{POSITIONs_KEYs_str}"
+    name_dir = f"filtered_vacancies_by_cats_poss\\{CATALOGs_KEYs_str}_{POSITIONs_KEYs_str}"
 
     filtered_dir_name = f"{project_dir}\{name_dir}" + ('_hard' if hard_match else '_soft')
     filtered_tmp_dir_name = filtered_dir_name + '\\tmp'
@@ -100,7 +100,7 @@ for cat_pos_tpl in TPLs:
                                                           cat_set=CATALOGs_KEYs,
                                                           pos_set=POSITIONs_KEYs,
                                                           hard_match=hard_match):
-                print(get_catalogues_from_vacancy(vacancy))
+                #print(get_catalogues_from_vacancy(vacancy))
                 vacancies.append(vacancy)
 
             if(len(vacancies)==100):
