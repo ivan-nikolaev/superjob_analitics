@@ -15,12 +15,12 @@ def generator_files_in_dir(top_directory, extension=''):
 def extract_zip_by_vacancy(input_zipfile, n=-1):
     print(f"\nОткрываем zip файл: {input_zipfile}")
     with zipfile.ZipFile(input_zipfile) as opened_zip:
-        for pickle_file_in_zip in tqdm(opened_zip.namelist()[:], desc="files in zip"):
+
+        tmp_files = opened_zip.namelist()[:]
+        tmp_files_ = tmp_files[:] if n==-1 else tmp_files[:n]
+
+        for pickle_file_in_zip in tqdm(tmp_files_, desc="files in zip"):
             with opened_zip.open(pickle_file_in_zip, 'r') as mypicklefile:
                 block_vacancies = pickle.load(mypicklefile)
-                if n == -1:
-                    for vacancy in block_vacancies:
-                        yield vacancy
-                else:
-                    for vacancy in block_vacancies[:n]:
-                        yield vacancy
+                for vacancy in block_vacancies:
+                    yield vacancy
