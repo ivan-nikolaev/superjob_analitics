@@ -57,10 +57,16 @@ print(files_zip)
 hard_match = True
 
 from catalog_class import Catalog
-catalog_obj = Catalog(r"..\\data\catalogues.pickle")
+catalog_obj = Catalog(r"data\catalogues.pickle")
 
 TPLs = [({key}, set()) for key in catalog_obj.generator_catalogs_keys()]
 print(TPLs)
+
+
+TPLs += [({catalog_key}, {position_key}) for catalog_key in catalog_obj.generator_catalogs_keys() for position_key in catalog_obj.generator_positions_keys_by_catalog_key(catalog_key)]
+print(TPLs)
+
+
 #TPLs = [({33},{48}), ({33},{51}), ({33},{48,51})]
 #TPLs = [({33}, set())]
 
