@@ -4,6 +4,7 @@ from tqdm import tqdm
 import bs4
 from bs4 import BeautifulSoup as bs
 import pandas
+import logging
 
 from project_tools.functions_for_vacancies import generator_vacancies_from_dir_with_zips
 
@@ -169,12 +170,22 @@ if os.path.exists(name_new_dir):
     shutil.rmtree(name_new_dir)
 os.mkdir(name_new_dir)
 
+
+
+logging.basicConfig(handlers=[logging.FileHandler(filename=f'{name_new_dir}\\log.log',
+                              encoding='utf-8',
+                              mode='a+')],
+                    format="%(asctime)s %(name)s:%(levelname)s:%(message)s",
+                    datefmt="%F %A %T",
+                    level=logging.INFO)
+
 #sub_dir = os.listdir(filtered_vacancies_dir)[0]
 for sub_dir in tqdm(os.listdir(filtered_vacancies_dir), desc="sub_dirs"):
 
     sub_filtered_dir = filtered_vacancies_dir + "\\" + sub_dir
     print()
-    print(sub_filtered_dir)
+    print(sub_filtered_dir, end = '')
+    logging.info("Каталог: " + sub_filtered_dir)
 
     #%%
     # def filter_vacancies_by_text_in_vacancyRichText(vacancies, sometext):
@@ -230,9 +241,15 @@ for sub_dir in tqdm(os.listdir(filtered_vacancies_dir), desc="sub_dirs"):
     d = len(list(set([i[0] for i in duties])))
     c = len(list(set([i[0] for i in conditions])))
 
-    print('Обязанностей найдено: ', len(requirements), 'в вакансиях', r, round(r / count, 2), "%")
-    print('Требований найдено: ', len(duties), 'в вакансиях', d, round(d / count, 2), "%")
-    print('Условий найдено: ', len(conditions), 'в вакансиях', c, round(c / count, 2), "%")
+
+    text = f'Всего вакансий: {count}\n' + \
+           f'Обязанностей найдено: {len(requirements)} в вакансиях {r} {round(r / count, 2)}%\n' + \
+           f'Требований найдено: {len(duties)} в вакансиях {d} {round(d / count, 2)} %\n' + \
+           f'Условий найдено: {len(conditions)} в вакансиях {c} {round(c / count, 2)} %\n'
+
+    print(text)
+#%%
+    logging.info(text)
 
     #%%
     print("Собираем df из RDC")
@@ -276,4 +293,5 @@ for sub_dir in tqdm(os.listdir(filtered_vacancies_dir), desc="sub_dirs"):
 
     df_id_rdc_date_cat_pos.to_pickle(f'{name_new_dir}\\{filename}.pkl', protocol=4)
     df_id_rdc_date_cat_pos.to_csv(f'{name_new_dir}\\{filename}.csv')
+    logging.info('='*20)
 
