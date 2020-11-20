@@ -1,43 +1,11 @@
 import os
 import shutil
 
-
 from project_tools.read_write_pickle import write_to_pickle
 from project_tools.os_tools import generator_files_in_dir
-from project_tools.os_tools import extract_zip_by_vacancy
+from project_tools.functions_for_vacancies import extract_zip_by_vacancy
 
-
-def get_catalogues_from_vacancy(vacancy):
-    try:
-        return [catalog['key'] for catalog in vacancy['catalogues']]
-    except:
-        return []
-
-
-def get_positions_from_vacancy(vacancy):
-    try:
-        return [position['key'] for catalog in vacancy['catalogues'] for position in catalog['positions']]
-    except:
-        return []
-
-
-def filter_vacancy_by_catalogues_and_positions(vacancy, cat_set=set(), pos_set=set(), hard_match=True):
-    try:
-        vacancy_cats = set(get_catalogues_from_vacancy(vacancy))
-        vacancy_poss = set(get_positions_from_vacancy(vacancy))
-    except:
-        return False
-
-    if hard_match:
-        if (cat_set == vacancy_cats or cat_set == set()) and (pos_set == vacancy_poss or pos_set == set()):
-            return True
-        else:
-            return False
-    else:
-        if (cat_set.issubset(vacancy_cats) or cat_set == set()) and (pos_set.issubset(vacancy_poss) or pos_set == set()):
-            return True
-        else:
-            return False
+from project_tools.functions_for_vacancies import filter_vacancy_by_catalogues_and_positions
 
 #%%
 
@@ -46,7 +14,6 @@ filtering_dir = f"{superjob_dir}\\filtered_vacancies_by_cats_poss"
 
 if not os.path.exists(filtering_dir):
     os.mkdir(filtering_dir)
-
 
 vacancies_zips = superjob_dir + '\\vacancies_zip_by_million'
 

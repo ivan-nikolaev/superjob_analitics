@@ -4,25 +4,10 @@ import pandas
 
 from project_tools.read_write_pickle import write_to_pickle
 from project_tools.os_tools import generator_files_in_dir
-from project_tools.os_tools import extract_zip_by_vacancy
+from project_tools.functions_for_vacancies import extract_zip_by_vacancy
 
-
-def filter_keys(vacancy, filter_keys):
-    new_vacancy = {filter_key: vacancy[filter_key] for filter_key in filter_keys if filter_key in vacancy.keys()}
-    return new_vacancy
-
-
-def normalize_catalogues_positions(vacancy):
-    try:
-        new_vacancy = {'id': vacancy['id'], 'date_published': vacancy['date_published']}
-        new_vacancy['catalogues'] = [catalog['id'] for catalog in vacancy['catalogues']]
-        new_vacancy['positions'] = [[position['id'] for position in catalog['positions']] for catalog in
-                                    vacancy['catalogues']]
-    except:
-        new_vacancy = {}
-
-    return new_vacancy
-
+from project_tools.functions_for_vacancies import normalize_catalogues_positions
+from project_tools.functions_for_vacancies import filter_keys
 
 project_dir = "F:\\superjob.ru"
 vacancies_zips = project_dir + '\\vacancies_zip_by_million'
