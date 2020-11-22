@@ -1,6 +1,7 @@
 import os
 import shutil
 import pandas
+import zipfile
 
 from project_tools.read_write_pickle import write_to_pickle
 from project_tools.os_tools import generator_files_in_dir
@@ -23,8 +24,8 @@ if os.path.exists(filtered_dir_name):
 
 os.mkdir(filtered_dir_name)
 
-for file_zip in files_zip[:]:
-    name = file_zip.split('\\')[-1]
+for file_zip in files_zip[:2]:
+    name = file_zip.split('\\')[-1].split('.')[0]
 
     filename_pkl = filtered_dir_name + f'\\id_date_cats_poss_{name}_df.pkl'
     if os.path.exists(filename_pkl):
@@ -43,5 +44,7 @@ for file_zip in files_zip[:]:
     df = pandas.DataFrame(filtered_normalized_vacancies)
     write_to_pickle(filename_pkl, df)
 
-    shutil.make_archive(filename_pkl + '.zip', 'zip', filename_pkl)
+    with zipfile.ZipFile(filename_pkl.replace('.pkl','.zip'), 'w') as myzip:
+        myzip.write(filename_pkl, os.path.basename(filename_pkl))
+
     os.remove(filename_pkl)
