@@ -24,7 +24,7 @@ if os.path.exists(filtered_dir_name):
 
 os.mkdir(filtered_dir_name)
 
-for file_zip in files_zip[:2]:
+for file_zip in files_zip[:]:
     name = file_zip.split('\\')[-1].split('.')[0]
 
     filename_pkl = filtered_dir_name + f'\\id_date_cats_poss_{name}_df.pkl'
@@ -44,7 +44,7 @@ for file_zip in files_zip[:2]:
     df = pandas.DataFrame(filtered_normalized_vacancies)
     write_to_pickle(filename_pkl, df)
 
-    with zipfile.ZipFile(filename_pkl.replace('.pkl','.zip'), 'w') as myzip:
+    with zipfile.ZipFile(filename_pkl.replace('.pkl','.zip'), 'w', zipfile.ZIP_DEFLATED) as myzip:
         myzip.write(filename_pkl, os.path.basename(filename_pkl))
 
     os.remove(filename_pkl)
