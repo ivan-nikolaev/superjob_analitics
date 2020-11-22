@@ -21,7 +21,7 @@ class Catalog:
         for catalog in self.catalogues:
             print(catalog['key'], ' ' * (6 - len(str(catalog['key']))), catalog['title_rus'])
 
-    def print_all_positions(self, key_catalog):
+    def print_all_positions_by_catalog_key(self, key_catalog):
         catalog = self.get_catalog_by_key(key_catalog)
         print(catalog['key'], catalog['title_rus'])
         for position in catalog['positions']:
@@ -42,7 +42,7 @@ class Catalog:
         else:
             return -1
 
-    def generator_catalogs_keys(self):
+    def generator_catalogues_keys(self):
         for catalog in self.catalogues:
             yield catalog['key']
 
@@ -50,6 +50,20 @@ class Catalog:
         for positions in self.get_catalog_by_key(catalog_key)['positions']:
             yield positions['key']
 
+    def get_title_catalog_by_key(self, key):
+        for catalog in self.catalogues:
+            if key == catalog['key']:
+                return catalog['title']
+        else:
+            return 'unknown'
+
+    def get_title_position_by_key(self, key):
+        for catalog in self.catalogues:
+            for position in catalog['positions']:
+                if key == position['key']:
+                    return position['title']
+        else:
+            return 'unknown'
 
 if __name__ == "__main__":
     catalog_ = Catalog(r"data\catalogues.pickle")
@@ -59,5 +73,5 @@ if __name__ == "__main__":
 
     print(catalog_.get_position_by_key(48))
 
-    for i in catalog_.generator_catalogs_keys():
+    for i in catalog_.generator_catalogues_keys():
         print(i)

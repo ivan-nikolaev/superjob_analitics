@@ -26,11 +26,11 @@ hard_match = True
 from catalog_class import Catalog
 catalog_obj = Catalog(r"data\catalogues.pickle")
 
-TPLs = [({key}, set()) for key in catalog_obj.generator_catalogs_keys()]
+TPLs = [({key}, set()) for key in catalog_obj.generator_catalogues_keys()]
 print(TPLs)
 
 
-TPLs += [({catalog_key}, {position_key}) for catalog_key in catalog_obj.generator_catalogs_keys() for position_key in catalog_obj.generator_positions_keys_by_catalog_key(catalog_key)]
+TPLs += [({catalog_key}, {position_key}) for catalog_key in catalog_obj.generator_catalogues_keys() for position_key in catalog_obj.generator_positions_keys_by_catalog_key(catalog_key)]
 print(TPLs)
 
 
