@@ -21,6 +21,9 @@ files_zip = [file for file in generator_files_in_dir(vacancies_zips, extension='
 print(files_zip)
 
 #%%
+print(len(files_zip))
+
+#%%
 hard_match = True
 
 from catalog_class import Catalog
@@ -33,10 +36,10 @@ print(TPLs)
 TPLs += [({catalog_key}, {position_key}) for catalog_key in catalog_obj.generator_catalogues_keys() for position_key in catalog_obj.generator_positions_keys_by_catalog_key(catalog_key)]
 print(TPLs)
 
-
+#%%
 #TPLs = [({33},{48}), ({33},{51}), ({33},{48,51})]
-#TPLs = [({33}, set())]
-
+TPLs = [({33}, set())]
+print(TPLs)
 #%%
 for cat_pos_tpl in TPLs:
     CATALOGs_KEYs = cat_pos_tpl[0]
@@ -58,7 +61,7 @@ for cat_pos_tpl in TPLs:
 
     os.mkdir(sub_filtering_dir )
     os.mkdir(tmp_sub_filtering_dir)
-    #%%
+
 
     vacancies = []
     part=1
