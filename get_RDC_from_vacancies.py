@@ -179,6 +179,8 @@ logging.basicConfig(handlers=[logging.FileHandler(filename=f'{name_new_dir}\\log
                     datefmt="%F %A %T",
                     level=logging.INFO)
 
+#%%
+
 #sub_dir = os.listdir(filtered_vacancies_dir)[0]
 for sub_dir in tqdm(os.listdir(filtered_vacancies_dir), desc="sub_dirs"):
 

@@ -24,7 +24,7 @@ print(files_zip)
 print(len(files_zip))
 
 #%%
-hard_match = True
+hard_match = False
 
 from catalog_class import Catalog
 catalog_obj = Catalog(r"data\catalogues.pickle")
