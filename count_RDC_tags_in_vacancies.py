@@ -1,5 +1,5 @@
 #%%
-from project_tools.functions_for_vacancies import get_vacancies_from_dir_with_zips
+from project_tools.tools_for_vacancies import get_vacancies_from_dir_with_zips
 
 
 #%%

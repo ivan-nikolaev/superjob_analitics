@@ -3,9 +3,9 @@ import shutil
 
 from project_tools.read_write_pickle import write_to_pickle
 from project_tools.os_tools import generator_files_in_dir
-from project_tools.functions_for_vacancies import extract_zip_by_vacancy
+from project_tools.tools_for_vacancies import extract_zip_by_vacancy
 
-from project_tools.functions_for_vacancies import filter_vacancy_by_catalogues_and_positions
+from project_tools.tools_for_vacancies import filter_vacancy_by_catalogues_and_positions
 
 #%%
 

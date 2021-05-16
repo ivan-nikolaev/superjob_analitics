@@ -1,5 +1,6 @@
 import pickle
 
+
 #%%
 class Catalog:
     def __init__(self, path):
@@ -15,6 +16,13 @@ class Catalog:
             print(f"{self.path} error reading catalog ...")
 
         # print(self.catalogues)
+
+    def print_all_info_cat_and_pos(self):
+        print(f'key, title_rus')
+        for catalog in self.catalogues:
+            print(catalog['key'], ' ' * (6 - len(str(catalog['key']))), catalog['title_rus'])
+            for position in catalog['positions']:
+                print("*"*4, position['key'], ' ' * (6 - len(str(position['key']))), position['title_rus'])
 
     def print_all_catalogues(self):
         print(f'key, title_rus')
@@ -67,12 +75,16 @@ class Catalog:
 
 #%%
 if __name__ == "__main__":
-    catalog_ = Catalog(r"../data/catalogues.pickle")
+    catalog = Catalog(r"data/catalogues.pickle")
+
+    catalog.print_all_info_cat_and_pos()
+
+
     # print(catalog.get_catalog_by_number(33))
     # catalog.print_all_catalogues()
     # catalog.print_all_positions(33)
 
-    print(catalog_.get_position_by_key(48))
-
-    for i in catalog_.generator_catalogues_keys():
-        print(i)
+    # print(catalog_.get_position_by_key(48))
+    #
+    # for i in catalog_.generator_catalogues_keys():
+    #     print(i)

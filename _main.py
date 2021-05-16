@@ -8,7 +8,6 @@ from my_tools.my_json_tools import pp_json
 
 from tqdm import tqdm
 
-
 def find_requirements_and_duties_in_vacancies(vacancies, dict_rdc={}):
     for vacancy in vacancies:
         find_requirements_and_duties_in_vacancy(vacancy, dict_rdc)

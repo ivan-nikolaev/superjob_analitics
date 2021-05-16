@@ -2,6 +2,7 @@ import pickle
 from tqdm import tqdm
 import zipfile
 from .os_tools import generator_files_in_dir
+from .read_write_pickle import write_to_pickle
 
 
 def extract_zip_by_vacancy(input_zipfile, n=-1):
@@ -52,6 +53,46 @@ def get_positions_from_vacancy(vacancy):
     except:
         return []
 
+def get_id_cat_and_pos_date_from_vacancy(vacancy):
+    data = {}
+    try:
+        data['id'] = vacancy['id']
+        data['catalogues'] = get_catalogues_from_vacancy(vacancy)
+        data['positions'] = get_positions_from_vacancy(vacancy)
+        data['date_published'] = vacancy['date_published']
+        return data
+    except:
+        return None
+
+
+def get_id_cat_pos_date_from_all_vacancies(src_dir, dst_dir, batch_size=100000):
+    print(f"src_dir: {src_dir}")
+    print(f"dst_dir: {dst_dir}")
+    print(f"batch_size: {batch_size}")
+
+    if not os.path.exists(dst_dir):
+        os.makedirs(dst_dir)
+
+    batch_part = []
+    A = 0
+
+    for vacancy in tqdm(generator_vacancies_from_dir_with_zips(src_dir)):
+        # print(vacancy)
+        if len(batch_part) >= batch_size:
+            # datetime.strftime(datetime.now(), "%Y.%m.%d_%H.%M.%S")
+            filename = f"{dst_dir}\\{str(A).zfill(10)}_{str(A + batch_size).zfill(10)}.pickle"
+
+            print(f"записываем в файл: {filename}")
+            write_to_pickle(filename, batch_part)
+
+            A += batch_size
+            batch_part = []
+
+        res = get_id_cat_and_pos_date_from_vacancy(vacancy)
+        if res != None:
+            batch_part.append(res)
+            # print(res)
+
 
 def filter_keys(vacancy, filter_keys):
     new_vacancy = {filter_key: vacancy[filter_key] for filter_key in filter_keys if filter_key in vacancy.keys()}
@@ -87,6 +128,7 @@ def filter_vacancy_by_catalogues_and_positions(vacancy, cat_set=set(), pos_set=s
             return True
         else:
             return False
+
 
 def get_filtered_vacancies_gen(vacancies, cat_set=set(), pos_set=set()):
     for vacancy in vacancies:

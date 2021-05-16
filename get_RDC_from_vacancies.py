@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup as bs
 import pandas
 import logging
 
-from project_tools.functions_for_vacancies import generator_vacancies_from_dir_with_zips
+from project_tools.tools_for_vacancies import generator_vacancies_from_dir_with_zips
 
 
 def clear_attr(lst_attrs):
@@ -266,8 +266,8 @@ for sub_dir in tqdm(os.listdir(filtered_vacancies_dir), desc="sub_dirs"):
     print(len(df_rdc))
 
     #%%
-    from project_tools.functions_for_vacancies import filter_keys
-    from project_tools.functions_for_vacancies import normalize_catalogues_positions
+    from project_tools.tools_for_vacancies import filter_keys
+    from project_tools.tools_for_vacancies import normalize_catalogues_positions
 
     new_vacancies = []
     for vacancy in generator_vacancies_from_dir_with_zips(sub_filtered_dir):
