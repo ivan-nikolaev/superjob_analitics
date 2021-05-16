@@ -26,7 +26,7 @@ print(len(files_zip))
 #%%
 hard_match = False
 
-from catalog_class import Catalog
+from project_tools.catalog_class import Catalog
 catalog_obj = Catalog(r"data\catalogues.pickle")
 
 TPLs = [({key}, set()) for key in catalog_obj.generator_catalogues_keys()]

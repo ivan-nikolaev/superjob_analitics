@@ -1,6 +1,6 @@
 import pickle
 
-
+#%%
 class Catalog:
     def __init__(self, path):
         self.path = path
@@ -65,8 +65,9 @@ class Catalog:
         else:
             return 'unknown'
 
+#%%
 if __name__ == "__main__":
-    catalog_ = Catalog(r"data\catalogues.pickle")
+    catalog_ = Catalog(r"../data/catalogues.pickle")
     # print(catalog.get_catalog_by_number(33))
     # catalog.print_all_catalogues()
     # catalog.print_all_positions(33)
